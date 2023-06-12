@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "./components/Modal";
 
 //Images
 import ImgDesktop from "./assets/images/illustration-sign-up-desktop.svg";
 import IconList from "./assets/images/icon-list.svg";
 import Notification from "./components/Notification";
+import ImgMobile from "./assets/images/illustration-sign-up-mobile.svg";
 
 function App() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      let newImageUrl;
+      if (screenWidth >= 480) {
+        newImageUrl = ImgDesktop;
+      } else {
+        newImageUrl = ImgMobile;
+      }
+      setImageUrl(newImageUrl);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   function handleOnSubmit(e) {
     e.preventDefault();
@@ -23,17 +43,17 @@ function App() {
 
   return (
     <div className="m-0 p-0 ">
-      <div className="w-full h-screen bg-charcoal-grey flex justify-center items-center">
+      <div className="w-full h-screen bg-charcoal-grey flex sm:justify-center sm:items-center">
         <form
-          className="w-[840px] h-[65%] rounded-[30px] bg-white flex p-4"
+          className="bg-white flex flex-col-reverse h-full  sm:flex-row  sm:w-[840px] sm:h-[65%] sm:rounded-[30px]  sm:p-4"
           onSubmit={(e) => {
             console.log("object");
             handleOnSubmit(e);
           }}
           noValidate
         >
-          <div className="flex-[50%] flex flex-col justify-center px-10">
-            <h2 className="color-dark-slate-grey text-[3rem] font-[700] m-0 mb-4">
+          <div className="flex-[0%] flex flex-col sm:flex-[50%]  justify-center px-10">
+            <h2 className="color-dark-slate-grey text-[3rem] font-[700] m-0 mb-6 leading-none">
               {" "}
               Stay updated!
             </h2>
@@ -41,17 +61,17 @@ function App() {
               Join 60,000+ product managers receiving monthly updates on:
             </p>
             <ul className="text-[14px] mb-8">
-              <li>
+              <li className="flex mb-2">
                 <img alt="" src={IconList} className="inline-block mr-4 mb-1" />
-                Product discovery and building what matters
+                <p>Product discovery and building what matters </p>
               </li>
-              <li>
+              <li className="flex mb-2">
                 <img alt="" src={IconList} className="inline-block mr-4 mb-1" />
-                And much more!
+                <p>And much more!</p>
               </li>
-              <li>
+              <li className="flex mb-2">
                 <img alt="" src={IconList} className="inline-block mr-4 mb-1" />
-                Measuring to ensure updates are a success
+                <p> Measuring to ensure updates are a success</p>
               </li>
             </ul>
             <div className="mb-5 relative flex flex-col">
@@ -89,11 +109,11 @@ function App() {
               Subscribe to monthly newsletter
             </button>
           </div>
-          <div className="flex-[50%]">
+          <div className="flex-none h-auto sm:h-full sm:flex-[50%]">
             <img
-              className="w-full h-full aspect-video"
+              className="w-full h-auto sm:h-full object-cover sm:rounded-[20px]"
               alt=""
-              src={ImgDesktop}
+              src={imageUrl ? imageUrl : ""}
             />
           </div>
         </form>
