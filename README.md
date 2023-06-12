@@ -1,2 +1,2 @@
-# vite-sito-template
-vite-sito-template
+# Frontend Mentor Challenger
+Frontend Mentor Challenger
