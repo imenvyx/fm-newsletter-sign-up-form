@@ -1,18 +1,23 @@
+import { useState } from "react";
+import Modal from "./components/Modal";
+
+//Images
 import ImgDesktop from "./assets/images/illustration-sign-up-desktop.svg";
 import IconList from "./assets/images/icon-list.svg";
-import { useState } from "react";
+import Notification from "./components/Notification";
+
 function App() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   function handleOnSubmit(e) {
     e.preventDefault();
-
     if (!email.includes("@")) {
       setError("Valid email required");
-      console.log(error);
     } else {
       setError("");
+      setShowModal(true);
     }
   }
 
@@ -49,18 +54,25 @@ function App() {
                 Measuring to ensure updates are a success
               </li>
             </ul>
-            <div className="mb-5 relative">
-              <label htmlFor="email" className=" text-[10px] font-[700] ">
+            <div className="mb-5 relative flex flex-col">
+              <label htmlFor="email" className=" text-[10px] font-[700] mb-2">
                 Email address
               </label>
               {error ? (
-                <span className=" text-[10px] font-[700] text-red-600 absolute r"> {error}</span>
+                <span className=" text-[10px] font-[500] text-red-600 absolute right-0">
+                  {" "}
+                  {error}
+                </span>
               ) : null}
               <input
                 id="email"
                 type="email"
                 name="email"
-                className="block w-full rounded-md text-[12px] px-5 cursor-pointer  border-gray-200  focus:text-grey focus:border-grey  focus:ring-0"
+                className={`block w-full rounded-md text-[12px] px-5 cursor-pointer   border-gray-200 ${
+                  error
+                    ? "focus: text-red-500/90 focus: border-red-900/60  focus:ring-0 bg-red-100"
+                    : "focus:text-black/80 focus:border-grey  focus:ring-0"
+                }`}
                 placeholder="email@company.com"
                 onChange={(e) => {
                   e.preventDefault();
@@ -72,7 +84,7 @@ function App() {
             <button
               id="submit"
               type="submit"
-              className="text-white text-[14px] rounded-md h-[50px]   bg-dark-slate-grey hover:bg-gradient-to-r hover:from-pink-500 hover:to-tomato hover:shadow-xl hover:shadow-tomato/40 "
+              className="text-white text-[14px] rounded-md h-[50px]   bg-dark-slate-grey hover:bg-gradient-to-r hover:from-pink-500 hover:to-tomato hover:shadow-xl hover:shadow-tomato/40 transition"
             >
               Subscribe to monthly newsletter
             </button>
@@ -86,6 +98,11 @@ function App() {
           </div>
         </form>
       </div>
+      {showModal ? (
+        <Modal>
+          <Notification email={email} setShowModal={setShowModal} />
+        </Modal>
+      ) : null}
     </div>
   );
 }
